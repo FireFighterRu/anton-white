@@ -1,0 +1,87 @@
+{
+  "retrieved": "2026-11-11",
+  "usage": "Editorial/educational archive examples, not VECTOR products; no NASA endorsement implied.",
+  "policy": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+  "video": {
+    "id": "AFRC-2025-14544-X-59_First_Flight_4K_MEDIA_BROLL_v4_10-28-25YT",
+    "collection": "https://images-assets.nasa.gov/video/AFRC-2025-14544-X-59_First_Flight_4K_MEDIA_BROLL_v4_10-28-25YT/collection.json",
+    "source": "archive/nasa-source/x59.mp4",
+    "credit": "NASA",
+    "edits": "Silent excerpts, 1280px, 24fps H.264 CRF25. No content alteration. Narrative text and diagram are VECTOR authored.",
+    "excerpts": [
+      {
+        "file": "x59-flight.mp4",
+        "start": 126,
+        "duration": 16
+      },
+      {
+        "file": "x59-test.mp4",
+        "start": 100,
+        "duration": 16
+      },
+      {
+        "file": "x59-sky.mp4",
+        "start": 166,
+        "duration": 16
+      }
+    ],
+    "poster": {
+      "file": "nasa-x59-flight.jpg",
+      "sourceTime": 136
+    }
+  },
+  "photos": [
+    {
+      "file": "nasa-x48-flight.jpg",
+      "id": "ED07-0164-1",
+      "credit": "NASA / Carla Thomas"
+    },
+    {
+      "file": "nasa-er2.jpg",
+      "id": "AFRC2022-0059-49",
+      "credit": "NASA / Lauren Hughes"
+    }
+  ],
+  "currentFilm": {
+    "title": "Невидимая архитектура",
+    "duration": 45,
+    "type": "Authored procedural canvas animation, not NASA footage or CFD",
+    "chapters": [
+      "Поток",
+      "Форма",
+      "Давление",
+      "Вихри",
+      "Система"
+    ]
+  },
+  "archiveVideos": [
+    {
+      "file": "x59-flight.mp4",
+      "sourceId": "AFRC-2025-14544-X-59_First_Flight_4K_MEDIA_BROLL_v4_10-28-25YT",
+      "start": 126,
+      "duration": 16
+    },
+    {
+      "file": "ttbw-test.mp4",
+      "sourceId": "NHQ20220113ARMD",
+      "start": 10,
+      "duration": 12,
+      "source": "https://images.nasa.gov/details/NHQ20220113ARMD"
+    },
+    {
+      "file": "er2-flight.mp4",
+      "sourceId": "AFRC_2023_13906_01_ER2_IMPACTS_BROLL_4KMASTER",
+      "start": 119,
+      "duration": 12,
+      "source": "https://images.nasa.gov/details/AFRC_2023_13906_01_ER2_IMPACTS_BROLL_4KMASTER"
+    },
+    {
+      "file": "x48-flight.mp4",
+      "source": "https://archive.org/details/nasa_tv-Blended_Wing_Body_Completes_Phase-1Tests",
+      "creator": "NASA TV",
+      "start": 48,
+      "duration": 15,
+      "note": "Original archival SD resolution 320x240; no invented motion."
+    }
+  ]
+}

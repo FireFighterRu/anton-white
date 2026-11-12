@@ -1,0 +1,45 @@
+/* Shared type scale for every VECTOR page. */
+.journal-scene{position:relative;isolation:isolate;background:#081322}
+.journal-scene canvas{display:block;width:100%;height:100%;position:absolute;inset:0}
+.scene-caption{position:absolute;bottom:17px;left:18px;right:60px;color:#a5c4d6;font:500 8px/1.6 Manrope,sans-serif;letter-spacing:.08em;pointer-events:none}
+.journal-scene .loop-toggle{width:36px;height:36px;right:12px;bottom:12px;font-size:14px}
+:root{--font-ui:Manrope,sans-serif}
+body{font-family:var(--font-ui);font-weight:400;line-height:1.7;font-synthesis:none;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--font-ui);font-weight:550;letter-spacing:-.035em;line-height:1.15;text-wrap:balance}
+button,input,select,textarea{font-family:var(--font-ui)}
+.site-header nav{gap:clamp(18px,1.8vw,30px)}
+.site-header nav a{font-size:15px;font-weight:500;letter-spacing:0;line-height:1.4;padding:16px 0}
+.site-header{gap:30px}
+.header-contact{font-size:14px;font-weight:500}
+.v-btn,.outline-btn,.text-link,.journal-card .text-link,.archive-grid .text-link,.film-trigger{font-family:var(--font-ui);font-size:15px;font-weight:500;letter-spacing:0;line-height:1.5}
+.v-btn,.outline-btn{min-height:56px;padding:16px 25px}
+.text-link{gap:26px;padding-bottom:8px}
+.eyebrow,.journal-card .eyebrow{font-size:11px;font-weight:500;letter-spacing:.11em;line-height:1.8}
+.journal-card h3{font-size:clamp(24px,2vw,30px);line-height:1.28;letter-spacing:-.025em}
+.journal-card>a{height:calc(100% - 1px)}
+.journal-card>a>div{display:flex;flex-direction:column;align-items:start;height:100%;padding-top:26px;padding-bottom:0}
+.journal-card{display:flex;flex-direction:column}
+.journal-card>.editorial-visual{flex:none;width:100%}
+.journal-card .text-link{margin-top:auto;padding-top:30px}
+.journal-card .eyebrow{margin-bottom:16px}
+.program-info>p:not(.eyebrow),.lab-reading p,.system-map>p,.tech-section details p{font-size:15px;line-height:1.8}
+.program-facts span,.compare-choice,.lab-toolbar>label,.lab-controls>label,.lab-view>p,.program-art>span,.blueprint>span{font-size:13px;line-height:1.6}
+.lab-controls .text-link,.lab-controls>.outline-btn,.article-layout .outline-btn{font-size:14px}
+.article-layout>nav a{font-size:14px;line-height:1.65}
+.note,.wide-photo figcaption,.research-feature figcaption,.media-gallery figcaption{font-size:13px;line-height:1.8}
+.wordmark>span{font-size:10px;letter-spacing:.14em}
+.process-tabs button{font-size:24px;font-weight:500;letter-spacing:-.02em}
+.process-tabs button>span{font:400 13px/1.5 var(--font-ui)}
+.footer-bottom,.footer-bottom button{font-size:12px;line-height:1.7}
+/* Equal insets and a centered content axis for the two article end panels. */
+.article-text .reading-sources,.article-text .article-next{padding:42px;margin:40px 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:22px}
+.article-text .reading-sources>:first-child,.article-text .article-next>:first-child{margin-top:0}
+.article-text .reading-sources h3,.article-text .article-next h3{font-size:28px;line-height:1.3;margin:0;max-width:28ch}
+.article-text .reading-sources p,.article-text .article-next p{margin:0;max-width:58ch;font-size:16px;line-height:1.8}
+.article-text .article-next .eyebrow{font-size:11px;letter-spacing:.13em}
+.article-text .reading-sources ul{list-style:none;padding:0;margin:0;width:100%}
+.article-text .reading-sources li{margin:0;padding:12px 0;border-top:1px solid #ffffff20;font-size:15px;line-height:1.7}
+.article-text .reading-sources li:last-child{padding-bottom:0}
+.article-text .article-next .v-btn{margin:0;justify-content:center;white-space:normal}
+@media(max-width:1100px) and (min-width:901px){.site-header{gap:18px}.site-header nav{gap:14px}.site-header nav a{font-size:14px}.header-actions{gap:12px}.header-contact{gap:10px;padding-inline:12px}}
+@media(max-width:700px){.site-header nav a{font-size:18px;padding:15px 0}.journal-card h3{font-size:25px}.article-text .reading-sources,.article-text .article-next{padding:30px 22px;gap:20px}.article-text .reading-sources h3,.article-text .article-next h3{font-size:24px}.article-text .article-next .v-btn{width:100%;font-size:14px}.process-tabs button{font-size:20px}.v-btn,.outline-btn{font-size:14px}}
