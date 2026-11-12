@@ -63,19 +63,58 @@ class Scene{
   ctx.lineWidth=.6;ctx.strokeStyle='#8bb8df16';for(let n=-8;n<=8;n+=2){const p=transform([n,-1.35,-6]),q=transform([n,-1.35,6]),r=transform([-8,-1.35,n]),s=transform([8,-1.35,n]);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.moveTo(r.x,r.y);ctx.lineTo(s.x,s.y);ctx.stroke()}
   const halo=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.55);halo.addColorStop(0,'#6a9aca10');halo.addColorStop(1,'#6a9aca00');ctx.fillStyle=halo;ctx.fillRect(0,0,W,H);
   const projected=model.map(f=>{const p=f.pts.map(v=>transform(v,f.group));return{p,color:f.color,z:p.reduce((n,v)=>n+v.z,0)/p.length}}).sort((a,b)=>b.z-a.z);
-  for(const f of projected){const p=f.p;const ux=p[1].rx-p[0].rx,uy=p[1].ry-p[0].ry,uz=p[1].z-p[0].z,vx=p[2].rx-p[0].rx,vy=p[2].ry-p[0].ry,vz=p[2].z-p[0].z;let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;const len=Math.hypot(nx,ny,nz)||1;nx/=len;ny/=len;nz/=len;const diffuse=Math.abs(nx*-.35+ny*.8+nz*-.45),shine=Math.pow(Math.abs(nz*.8+ny*.6),14)*30;const light=.48+diffuse*.55;
+  // Model-specific explanatory streamlines: nose to tail, with a wingtip wake.
+  // These paths illustrate geometry; they are not a CFD solution.
+  if(this.mode==='flow'){
+   const cargo=this.model==='atlas',long=this.model==='horizon';
+   const halfSpan=cargo?5.6:long?8:5.1,length=cargo?8.2:long?6.8:8.7;
+   const bodyRadius=cargo?.8:long?.35:.62,wingY=cargo?.5:0;
+   const rootChord=cargo?1.8:long?1.3:3.35,tipChord=long?.4:.55;
+   const sweep=cargo?.5:long?.85:3.5,base=cargo?-.55:long?-.5:-1.55;
+   for(let row=-8;row<=8;row++)for(const side of [-1,1]){
+    const lane=row*(halfSpan+.24)/8,abs=Math.abs(lane),u=clamp((abs-.24)/halfSpan,0,1);
+    const leading=base+sweep*u,chord=rootChord+(tipChord-rootChord)*u,trailing=leading+chord;
+    const points=[];
+    for(let i=0;i<=88;i++){
+     const z=-7+i*16/88;
+     // Smooth clearance follows the same fuselage loft used by the mesh.
+     const bodyT=clamp((z+length*.53)/length,0,1);
+     const body=bodyRadius*Math.pow(Math.sin(Math.PI*bodyT),.62)*(1-.24*bodyT);
+     const clearance=Math.sqrt(Math.max(0,body*body-lane*lane))*(cargo?.85:.72);
+     const chordT=(z-leading)/chord;
+     const envelope=Math.exp(-Math.pow((chordT-.45)/.68,2));
+     const tipY=Math.pow(u,3)*.3;
+     const wingLift=abs<=halfSpan+.24?envelope*(.17+tipY):0;
+     const baseline=wingY+side*.22;
+     let y=baseline+side*wingLift;
+     if(abs<body+.2)y=side>0?Math.max(y,clearance+.23):Math.min(y,-clearance-.22);
+     // Downwash develops after the local trailing edge, never ahead of the wing.
+     const wake=Math.max(0,z-trailing),settle=1-Math.exp(-wake*.6);
+     y-=settle*.18*(1-u*.5);
+     let x=lane;
+     // Only the outer lanes roll into counter-rotating wingtip wakes.
+     if(Math.abs(abs-(halfSpan+.24))<.12&&wake>0){
+      const radius=.10*settle,phase=wake*2.1;
+      x+=Math.sign(lane)*radius*(Math.cos(phase)-1);
+      y+=side*radius*Math.sin(phase);
+     }
+     points.push(transform([x,y,z]));
+    }
+    const head=((this.time*.23+row*.071+side*.11)%1+1)%1*(points.length-1);
+    for(let i=0;i<points.length-1;i++)projected.push({flow:true,p:[points[i],points[i+1]],z:(points[i].z+points[i+1].z)/2,bright:Math.abs(i-head)<1.5});
+   }
+   projected.sort((a,b)=>b.z-a.z);
+  }
+  for(const f of projected){if(f.flow){ctx.beginPath();ctx.moveTo(f.p[0].x,f.p[0].y);ctx.lineTo(f.p[1].x,f.p[1].y);ctx.strokeStyle=f.bright?'#dbf6ff':'#8cd6f85c';ctx.lineWidth=f.bright?1.8:.75;ctx.stroke();continue;}
+const p=f.p;const ux=p[1].rx-p[0].rx,uy=p[1].ry-p[0].ry,uz=p[1].z-p[0].z,vx=p[2].rx-p[0].rx,vy=p[2].ry-p[0].ry,vz=p[2].z-p[0].z;let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;const len=Math.hypot(nx,ny,nz)||1;nx/=len;ny/=len;nz/=len;const diffuse=Math.abs(nx*-.35+ny*.8+nz*-.45),shine=Math.pow(Math.abs(nz*.8+ny*.6),14)*30;const light=.48+diffuse*.55;
    ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);for(let j=1;j<p.length;j++)ctx.lineTo(p[j].x,p[j].y);ctx.closePath();
    if(this.mode==='wire'){ctx.strokeStyle='#8fc9f068';ctx.lineWidth=.55;ctx.stroke()}else{ctx.fillStyle=`rgb(${f.color.map(c=>Math.round(clamp(c*light+shine,0,255))).join(',')})`;ctx.fill();ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=.45;ctx.stroke()}
-  }
-  // Stream curves illustrate flow direction, not calculated aerodynamic values.
-  if(this.mode==='flow'){
-   for(let row=-5;row<=5;row++){for(const layer of [-.6,.8]){ctx.beginPath();let points=[];for(let i=0;i<=50;i++){const z=-7+i*.28,x=row*1.05;const def=Math.exp(-z*z*.16)*Math.exp(-x*x*.12);points.push(transform([x+Math.sign(x)*def*.5,layer+def*.65,z]))}points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle=row%2?'#8cd6f84d':'#c0e5ff66';ctx.lineWidth=.8;ctx.stroke();const k=Math.floor(((this.time*.28+row*.1+layer)%1+1)%1*49);const point=points[k];ctx.fillStyle='#c9ecff';ctx.beginPath();ctx.arc(point.x,point.y,1.5,0,TAU);ctx.fill()}}
   }
   // Restrained engine light in cinematic final chapter.
   if(this.film&&this.filmTime>27){for(const side of [-1,1]){const p=transform([side*1.12,-.25,3.3],2);const glow=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,28);glow.addColorStop(0,'#bce9ffb0');glow.addColorStop(.2,'#70b9ed55');glow.addColorStop(1,'#70b9ed00');ctx.fillStyle=glow;ctx.fillRect(p.x-28,p.y-28,56,56)}}
  }
 }
 const scenes=new Map();document.querySelectorAll('canvas.aircraft').forEach(el=>scenes.set(el,new Scene(el)));let last=0;
-function loop(now){requestAnimationFrame(loop);if(now-last<32)return;const dt=Math.min((now-last)/1000,.08)||.033;last=now;for(const s of scenes.values())s.render(dt,window.vectorMotionPaused||false)}requestAnimationFrame(loop);
+function loop(now){requestAnimationFrame(loop);if(document.hidden||document.querySelector('#film-dialog[open]')){last=now;return}if(now-last<32)return;const dt=Math.min((now-last)/1000,.08)||.033;last=now;for(const s of scenes.values())s.render(dt,window.vectorMotionPaused||false)}requestAnimationFrame(loop);
 window.VectorScenes={get:el=>scenes.get(el),all:scenes};
 })();
