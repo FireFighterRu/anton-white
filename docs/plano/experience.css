@@ -17,3 +17,5 @@
 .product-primary>span::before{content:'';position:absolute;left:2px;top:9px;width:17px;height:1.5px;background:currentColor;transform:rotate(-45deg)}
 .product-primary>span::after{content:'';position:absolute;right:1px;top:2px;width:9px;height:9px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor}
 @media(max-width:700px){.product-primary{font-size:15px;padding:17px 23px;gap:32px}}
+
+@media(max-width:760px){.plano-reveal{opacity:1;translate:none;transition:none}.workspace-main,.workspace-sidebar,.task-list,.task-item{min-width:0}.task-title{overflow-wrap:anywhere}}
