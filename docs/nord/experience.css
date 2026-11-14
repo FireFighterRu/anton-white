@@ -10,3 +10,17 @@
 @media(prefers-reduced-motion:reduce){.detail-journey{height:auto}.journey-stage{position:relative}.hero-curtain{display:none}.light-on .hero-copy,.hero-inspect b span{animation:none}.hero-car{transform:none}.journey-frame{transition:none;transform:none}.journey-scroll{display:none}.journey-progress{display:none}html{scroll-behavior:auto}}
 
 @media(max-width:760px){.nord-reveal{opacity:1;transform:none;transition:none}.journey-stage{height:740px;max-height:none}.journey-copy{bottom:160px}.journey-tabs button{min-height:44px}.journey-top{right:22px}.result-card,.result-card-copy{min-width:0}}
+
+/* Keep chapter content and navigation in separate flow rows, at every viewport height. */
+.detail-journey .journey-stage{display:grid;grid-template-rows:auto minmax(min-content,1fr) auto;gap:28px;padding:32px 5%;height:auto;min-height:100svh;box-sizing:border-box}
+.detail-journey .journey-top,.detail-journey .journey-copy,.detail-journey .journey-bottom{position:relative;inset:auto;min-width:0}
+.detail-journey .journey-top{grid-row:1;flex-wrap:wrap}
+.detail-journey .journey-copy{grid-row:2;align-self:center;max-width:780px;margin:24px 0}
+.detail-journey .journey-copy h2{font-size:clamp(36px,min(5.8vw,8svh),80px);overflow-wrap:break-word;margin:18px 0}
+.detail-journey .journey-copy>p{max-width:560px}
+.journey-actions{display:flex;align-items:center;flex-wrap:wrap;gap:16px 28px}
+.journey-actions .journey-card{margin:0;max-width:100%}
+.journey-actions .journey-add{max-width:100%;white-space:normal;text-align:left}
+.detail-journey .journey-bottom{grid-row:3;align-self:end}
+@media(max-width:700px),(max-height:759px){.detail-journey{height:auto}.detail-journey .journey-stage{position:relative}.journey-scroll,.journey-progress{display:none}}
+@media(max-width:700px){.detail-journey .journey-stage{padding:24px 22px;gap:28px;min-height:760px}.detail-journey .journey-copy{margin:36px 0}.detail-journey .journey-copy h2{font-size:clamp(32px,8vw,50px)}.journey-actions{align-items:flex-start;flex-direction:column;gap:10px}.detail-journey .journey-top{display:flex;gap:8px}.journey-top>a{margin:0}}
