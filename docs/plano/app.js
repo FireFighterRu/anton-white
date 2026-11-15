@@ -3,7 +3,7 @@ const MAX = 100;
 let tasks = [], filter = 'all', editId = null, lastDeleted = null, persisted = true, blocked = false;
 let storage;
 try { storage = window.localStorage; } catch { storage = {getItem(){throw Error('unavailable')},setItem(){throw Error('unavailable')}}; }
-const seed = () => ['Выбрать главное на сегодня','Освободить время для своей идеи','Выйти на небольшую прогулку'].map((text,i)=>({id:crypto.randomUUID(),text,done:false,focus:i===0}));
+const seed = () => ['Выбрать главное на сегодня','Освободить время для своей идеи','Выйти на небольшую прогулку'].map((text,i)=>({id:PlanoStorage.newId(),text,done:false,focus:i===0}));
 const status = document.querySelector('#storage-status');
 let toastTimer;
 function toast(text){const el=document.querySelector('.toast');el.textContent=text;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),4500)}
@@ -51,7 +51,7 @@ window.addEventListener('storage',e=>{if(e.key===STORAGE||e.key===null){if(!pers
 document.querySelector('#today').textContent=new Intl.DateTimeFormat('ru-RU',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
 document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{filter=b.dataset.filter;updateFilters();render()}));
 function updateFilters(){document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b.dataset.filter===filter);b.setAttribute('aria-pressed',String(b.dataset.filter===filter))})}
-document.querySelector('#add-form').addEventListener('submit',async e=>{e.preventDefault();const input=document.querySelector('#task-input'),text=input.value.trim(),error=document.querySelector('#form-error');if(!text){error.textContent='Введите название задачи.';return}const success=await mutate(()=>{if(tasks.length>=MAX){error.textContent='В списке уже 100 задач. Освободите место для новой.';return false}tasks.unshift({id:crypto.randomUUID(),text,done:false,focus:false});filter='all';updateFilters()});if(success){input.value='';error.textContent='';input.focus();toast('Задача добавлена')}});
+document.querySelector('#add-form').addEventListener('submit',async e=>{e.preventDefault();const input=document.querySelector('#task-input'),text=input.value.trim(),error=document.querySelector('#form-error');if(!text){error.textContent='Введите название задачи.';return}const success=await mutate(()=>{if(tasks.length>=MAX){error.textContent='В списке уже 100 задач. Освободите место для новой.';return false}tasks.unshift({id:PlanoStorage.newId(),text,done:false,focus:false});filter='all';updateFilters()});if(success){input.value='';error.textContent='';input.focus();toast('Задача добавлена')}});
 document.querySelector('#task-input').addEventListener('input',()=>document.querySelector('#form-error').textContent='');
 document.querySelector('#undo').addEventListener('click',()=>mutate(()=>{if(!lastDeleted)return false;if(tasks.length>=MAX){toast('В списке 100 задач. Освободите место для восстановления.');return false}if(!tasks.some(t=>t.id===lastDeleted.task.id))tasks.splice(Math.min(lastDeleted.index,tasks.length),0,lastDeleted.task);lastDeleted=null;document.querySelector('.undo-row').hidden=true;filter='all';updateFilters();document.querySelector('#task-input').focus();toast('Задача восстановлена')}));
 const dialog=document.querySelector('#edit-dialog');

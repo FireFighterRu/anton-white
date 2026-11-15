@@ -53,7 +53,7 @@ class Scene{
   if(this.film){const t=this.filmTime,chapter=Math.min(3,Math.floor(t/9)),u=(t%9)/9;yaw=-.8+t*.075;pitch=.32+Math.sin(t*.11)*.22;exp=chapter===1?Math.sin(u*Math.PI)*.95:0;this.mode=chapter===0&&t<4?'wire':chapter===2?'flow':'solid';if(chapter===3){yaw=1.3+u*.3;pitch=.4-u*.22}}
   else if(this.rotate&&move)yaw+=Math.sin(this.time*.25)*.2;
   const ease=reduced?1:Math.min(1,dt*7);this.yaw+=(yaw-this.yaw)*ease;this.pitch+=(pitch-this.pitch)*ease;this.open+=(exp-this.open)*ease;
-  if(paused&&!this.dirty&&!this.film&&Math.abs(yaw-this.yaw)<.001&&Math.abs(this.open-exp)<.001)return;
+  if(!move&&!this.dirty&&!this.film&&Math.abs(yaw-this.yaw)<.001&&Math.abs(pitch-this.pitch)<.001&&Math.abs(this.open-exp)<.001)return;
   this.dirty=false;const ctx=this.ctx,W=this.width,H=this.height;ctx.clearRect(0,0,W,H);
   const model=geometry(this.model),span=this.model==='horizon'?17:this.model==='atlas'?12:11.2;
   const scale=Math.min(W/(span+2.4+this.open*2.5),H/(10+this.open))*(this.film?.98:1.04);const cx=this.film?W*(W<600?.54:.64):W*.5,cy=this.film?H*(W<600?.36:.46):H*.47;

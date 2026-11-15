@@ -53,12 +53,12 @@
  }
  const drawFns={air,structure,prototype};
  for(const canvas of document.querySelectorAll('[data-journal-scene]')){
-  const item={canvas,c:canvas.getContext('2d',{alpha:false}),visible:false,paused:false,t:0,last:0,dirty:true};items.push(item);
+  const item={canvas,c:canvas.getContext('2d',{alpha:false}),visible:false,paused:false,t:0,last:0,dirty:true,lastPaint:0};items.push(item);
   const button=canvas.parentElement.querySelector('[data-cover-toggle]');
   button.addEventListener('click',()=>{item.paused=!item.paused;button.setAttribute('aria-pressed',String(item.paused));button.setAttribute('aria-label',item.paused?'Воспроизвести анимацию обложки':'Приостановить анимацию обложки');button.textContent=item.paused?'▶':'Ⅱ'});
   new ResizeObserver(()=>item.dirty=true).observe(canvas);
  }
  if(!items.length)return;
  const observer=new IntersectionObserver(entries=>{for(const e of entries){const item=items.find(x=>x.canvas===e.target);item.visible=e.isIntersecting;item.last=0}},{threshold:.1});items.forEach(x=>observer.observe(x.canvas));
- function frame(now){for(const item of items){if(!item.visible||document.hidden||document.querySelector('#film-dialog[open]')){item.last=0;continue}const motion=!item.paused&&!reduced.matches&&!window.vectorMotionPaused;if(motion&&item.last)item.t+=Math.min((now-item.last)/1000,.05);item.last=now;if(!motion&&!item.dirty)continue;const rect=item.canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio,1.5);if(!rect.width||!rect.height)continue;const W=Math.round(rect.width*dpr),H=Math.round(rect.height*dpr);if(item.canvas.width!==W||item.canvas.height!==H){item.canvas.width=W;item.canvas.height=H}item.c.setTransform(dpr,0,0,dpr,0,0);base(item.c,rect.width,rect.height);drawFns[item.canvas.dataset.journalScene](item.c,rect.width,rect.height,item.t);item.dirty=false}requestAnimationFrame(frame)}requestAnimationFrame(frame);
+ function frame(now){for(const item of items){if(!item.visible||document.hidden||document.querySelector('#film-dialog[open]')){item.last=0;continue}const motion=!item.paused&&!reduced.matches&&!window.vectorMotionPaused;if(motion&&item.last)item.t+=Math.min((now-item.last)/1000,.05);item.last=now;if(!motion&&!item.dirty)continue;if(motion&&!item.dirty&&now-item.lastPaint<1000/30)continue;item.lastPaint=now;const rect=item.canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio,1.5);if(!rect.width||!rect.height)continue;const W=Math.round(rect.width*dpr),H=Math.round(rect.height*dpr);if(item.canvas.width!==W||item.canvas.height!==H){item.canvas.width=W;item.canvas.height=H}item.c.setTransform(dpr,0,0,dpr,0,0);base(item.c,rect.width,rect.height);drawFns[item.canvas.dataset.journalScene](item.c,rect.width,rect.height,item.t);item.dirty=false}requestAnimationFrame(frame)}requestAnimationFrame(frame);
 })();

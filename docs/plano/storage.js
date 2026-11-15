@@ -30,7 +30,14 @@
     storage.setItem(KEY, '[]');
     return true;
   }
-  const api = { KEY, BACKUP, parse, read, recover };
+  // getRandomValues also works on HTTP while the custom domain awaits HTTPS.
+  function newId() {
+    if (root.crypto?.randomUUID) return root.crypto.randomUUID();
+    const bytes = new Uint8Array(16);
+    root.crypto.getRandomValues(bytes);
+    return Array.from(bytes, value => value.toString(16).padStart(2, '0')).join('');
+  }
+  const api = { KEY, BACKUP, parse, read, recover, newId };
   if (typeof module !== 'undefined') module.exports = api;
   else root.PlanoStorage = api;
 })(typeof window !== 'undefined' ? window : globalThis);
